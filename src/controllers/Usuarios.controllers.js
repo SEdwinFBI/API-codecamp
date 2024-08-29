@@ -2,10 +2,7 @@ import sequelize from "../database/Connection.js";
 import { encrypt } from "../helpers/handelBcrypt.js";
 import { invalidarEmail } from "../helpers/emailValid.js";
 
-//id de estado y el id de rol
-//lista los usuarios totales sin parametros
-//lista segun rol(null, id)
-//lista segun idEstado(idestado, null)
+//obtener usuario
 export const getUsuario = async (req, res) => {
   const { idUsuario } = req.params;
   try {
@@ -27,7 +24,7 @@ export const getUsuario = async (req, res) => {
     console.error("Error al ejecutar el procedimiento almacenado:", error);
   }
 };
-
+//obtener usuarios
 export const getUsuarios = async (req, res) => {
   try {
     const [result, metadata] = await sequelize.query(
@@ -42,7 +39,7 @@ export const getUsuarios = async (req, res) => {
     console.error("Error al obtener la vista:", error);
   }
 };
-
+//actualizar
 export const updateUsuario = async (req, res) => {
   const { idUsuario } = req.params;
   const {
@@ -83,7 +80,7 @@ export const updateUsuario = async (req, res) => {
     console.log("error",error)
   }
 };
-
+//nuevo usuario
 export const setUsuario = async (req, res) => {
   const {
     fkRol,

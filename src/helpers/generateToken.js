@@ -2,7 +2,7 @@ import jsonwebtoken from "jsonwebtoken";
 import dotenv from "dotenv";
 
 dotenv.config();
-const JWT_SECRET =  process.env.JWT_SECRET ;
+const JWT_SECRET =  process.env.JWT_SECRET ;//1490242366
 const jwt = jsonwebtoken;
 
 export const tokenSign = async(user)=>{//generar token

@@ -4,7 +4,7 @@ import sequelize from "./database/Connection.js";
 import dotenv from "dotenv";
 dotenv.config()
 
-const port = parseInt(process.env.PORT)||3000;
+const port = parseInt(process.env.PORT)||3000;//3000
 app.set("port",port);
 
 try {

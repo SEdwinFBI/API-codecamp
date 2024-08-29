@@ -61,15 +61,14 @@ export const crearOrdenConDetalles = async (req, res) => {
       
       // comparo ambos
       if (total !== totalBD) {
+     res.status(400).json({ mensaje: "Error el total no coincide" });
         throw new Error(
-          "El total proporcionado no coincide con el total calculado."
+          "El total no coincide"
         );
       }
 
       // Si todo sale bien
-      res
-        .status(201)
-        .json({ mensaje: "Orden y detalles agregados exitosamente." });
+      res.status(201).json({ mensaje: "Gracias por su compra" });
     });
   } catch (error) {
     console.error("Error al manejar la transacción:", error);
