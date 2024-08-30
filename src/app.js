@@ -18,6 +18,9 @@ app.use(categoriaProductosRoute);
 app.use(authRoute);
 app.use(UsuariosRoute);
 app.use(OrdenDetalleRoute);
+app.use((req,res)=>{
+    res.status(404).json({mensaje:"not found"})
+})
 
 
 

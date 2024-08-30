@@ -26,10 +26,10 @@ export const validToken = async (req, res, next) => {
 
 export const authRol = (rolRoute)=>async(req,res,next)=>{//roles
     try {
-        const {rol} =req.userData;//extraemos el idUsuario
-        const [nombre, metadata] = await sequelize.query( "EXEC sp_obtener_rol :idRol",{
+        const {idUsuario} =req.userData;//extraemos el idUsuario
+        const [nombre, metadata] = await sequelize.query( "EXEC sp_obtener_rol :idUsuario",{
               replacements: {
-                idRol:rol
+                idUsuario:idUsuario
               }});//obtenemos el rol
           if ([].concat(rolRoute).includes(nombre[0].rol)) {//validamos si tiene el rol esperado
             next();//seguimos el flujo
