@@ -9,22 +9,20 @@ import { encrypt, compare } from "../helpers/handelBcrypt.js";
 export const login = async (req, res) => {
   const { email, password_user } = req.body;
   try {
-    const data = await existUser(email);//validador de emails
+    const data = await existUser(email);//validador de emails y todo los datos
     if (!data) {
         return res.status(400).json({"mensaje":"usuario no encontrado"});
       };
-      
     const validacion = await compare(password_user, data[0].password_user);//es valido?
 
-
-
     if (validacion) {
-      const tokenSession = await tokenSign(data[0]); 
-      //retronamos el token y mas datos
+      const tokenSession = await tokenSign(data[0]); //bearer token
+      //retornamos el token que va en el request
       return res.status(200).json({
-        "data":data[0],
+        //"data":data[0],//datos del usuario. 
         tokenSession
       });
+
     } else {
      return res.status(404).json({"mensaje":"error contraseña o correo incorrecto"});
     }

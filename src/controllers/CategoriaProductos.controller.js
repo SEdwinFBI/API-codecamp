@@ -31,12 +31,13 @@ export const getCategoriaProducto = async(req,res)=>{
 };
 
 export const setCategoriaProducto = async(req,res)=>{
-    const {fkUsuario,nombre,fkEstado}= req.body;
+    const {idUsuario }= req.userData
+    const {nombre,fkEstado}= req.body;
     
     try {
         const result = await sequelize.query('EXEC nuevo_cat_productos :fkUsuario, :nombre, :fkEstado',{
             replacements:{
-                fkUsuario,
+                fkUsuario:idUsuario,
                 nombre,
                 fkEstado
             }
@@ -52,14 +53,15 @@ export const setCategoriaProducto = async(req,res)=>{
     }
 };
 export const updateCategoriaProducto = async(req,res)=>{
+    const {idUsuario }= req.userData
     const idCategoriaProducto = req.params.idCategoriaProducto;
-    const {fkUsuario,nombre,fkEstado}= req.body;
+    const {nombre,fkEstado}= req.body;
     
     try {
         const [result,metadata ]= await sequelize.query('EXEC update_cat_productos :idCategoriaProducto, :fkUsuario, :nombre, :fkEstado',{
             replacements:{
                 idCategoriaProducto,
-                fkUsuario,
+                fkUsuario:idUsuario,
                 nombre,
                 fkEstado
             }

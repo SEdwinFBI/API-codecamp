@@ -1,8 +1,9 @@
 import sequelize from "../database/Connection.js";
 
 export const crearOrdenConDetalles = async (req, res) => {
+  const {idUsuario }= req.userData
   const {
-    fkUsuario,
+
     nombre,
     direccion,
     telefono,
@@ -21,7 +22,7 @@ export const crearOrdenConDetalles = async (req, res) => {
         "EXEC nueva_orden :fkUsuario, :nombre, :direccion, :telefono, :email, :fecha_entrega, :total",
         {
           replacements: {
-            fkUsuario,
+            fkUsuario:idUsuario,
             nombre,
             direccion,
             telefono,
@@ -61,10 +62,8 @@ export const crearOrdenConDetalles = async (req, res) => {
       
       // comparo ambos
       if (total !== totalBD) {
-     res.status(400).json({ mensaje: "Error el total no coincide" });
-        throw new Error(
-          "El total no coincide"
-        );
+        throw new Error("El total no coincide");
+        
       }
 
       // Si todo sale bien
@@ -127,10 +126,11 @@ export const getOrdenDetalles = async (req, res) => {
     }
   };
 export const updateOrden = async (req, res) => {
+  const {idUsuario }= req.userData   //usuario    quien confirma, entrga o rechaza el pedidio,
   try {
     const idOrden = req.params.idOrden;
     const {
-      idUsuario,//usuario    quien confirma, entrga o rechaza el pedidio,
+     //usuario    quien confirma, entrga o rechaza el pedidio,
       fkUsuario,//usuario quien realizo el pedido
       fkEstado,//estado que cambiara
       nombre,//nombre del cliente de destino
@@ -168,11 +168,13 @@ export const updateOrden = async (req, res) => {
   }
 };
 export const getHistorial = async (req, res) => {
-    const {fkUsuario} =req.params//el id del usuario quien ve su historial, 
-    //tambien pude usarse para ver el histrial de un cliente para un futuro uso
+  
+  const {idUsuario }= req.userData   //el id del usuario quien ve su historial, 
+   
+    
     try {
       const result = await sequelize.query("SELECT * FROM view_ordenes where fkUsuario =:fkUsuario",{
-        replacements:{fkUsuario}
+        replacements:{fkUsuario:idUsuario}
       });
   
       res.status(200).json(result);

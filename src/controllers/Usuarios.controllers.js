@@ -4,7 +4,7 @@ import { invalidarEmail } from "../helpers/emailValid.js";
 
 //obtener usuario
 export const getUsuario = async (req, res) => {
-  const { idUsuario } = req.params;
+  const { idUsuario } = req.params;//obtener los datos de un usuario
   try {
     const [result, metadata] = await sequelize.query(
       "EXEC sp_obtener_usuario :idUsuario",
@@ -41,7 +41,7 @@ export const getUsuarios = async (req, res) => {
 };
 //actualizar
 export const updateUsuario = async (req, res) => {
-  const { idUsuario } = req.params;
+  const { idUsuario } = req.params;//usuario a actualizar
   const {
     fkRol,
     fkEstado,
@@ -100,7 +100,6 @@ export const setUsuario = async (req, res) => {
       "EXEC crear_usuario :fkRol, :fkEstado, :nombre, :email,:password_user, :telefono, :fecha_nacimiento",
       {
         replacements: {
-
           fkRol,
           fkEstado,
           nombre,

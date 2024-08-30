@@ -5,6 +5,7 @@ export const getProducts = async (req, res) => {
   try {
     const response = await sequelize.query("SELECT * FROM view_productos");
     res.status(200).json(response);
+
   } catch (error) {
     res.status(500).json({mensaje:"error interno"})
     console.error("Error al ejecutar la vista view_productos:", error);
@@ -29,9 +30,9 @@ export const getProduct = async (req, res) => {
 };
 //Guardar proucto
 export const setProduct = async (req, res) => {
+  const {idUsuario }= req.userData
   const {
     fkCategoriaProducto,
-    fkUsuario,
     nombre,
     marca,
     codigo,
@@ -43,7 +44,7 @@ export const setProduct = async (req, res) => {
 
   if (
     !fkCategoriaProducto ||
-    !fkUsuario ||
+
     !nombre ||
     !marca ||
     !codigo ||
@@ -61,7 +62,7 @@ export const setProduct = async (req, res) => {
       {
         replacements: {
           fkCategoriaProducto: parseInt(fkCategoriaProducto),
-          fkUsuario: parseInt(fkUsuario),
+          fkUsuario: parseInt(idUsuario),
           nombre,
           marca,
           codigo,
@@ -81,10 +82,10 @@ export const setProduct = async (req, res) => {
 };
 
 export const updateProduct = async (req, res) => {
+  const {idUsuario }= req.userData
   const idProducto = req.params.idProducto;
   const {
     fkCategoriaProducto,
-    fkUsuario,
     nombre,
     marca,
     codigo,
@@ -101,7 +102,7 @@ export const updateProduct = async (req, res) => {
         replacements: {
           idProducto: parseInt(idProducto),
           fkCategoriaProducto: parseInt(fkCategoriaProducto),
-          fkUsuario: parseInt(fkUsuario),
+          fkUsuario: parseInt(idUsuario),
           nombre,
           marca,
           codigo,

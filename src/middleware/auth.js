@@ -1,21 +1,16 @@
 import sequelize from "../database/Connection.js";
 import { verifyToken } from "../helpers/generateToken.js";
 
-// Asegúrate de tener importada la función verifyToken
-
 export const validToken = async (req, res, next) => {
     try {
-        const tokenSession = req.headers.authorization;//obtenemos el encabezado
-        console.log(tokenSession)
+        const tokenSession = req.headers.authorization;//obtenemos el encabezado: bearer y token
         if (!tokenSession) {
             return res.status(401).json({"mensaje":"sin autorizacion"});//si no existe el encabezado
         }
-        const token = tokenSession.split(' ')[1]; // extraemos el encabezado y el objeto 2
-        const tokenData = await verifyToken(token); // verificamos el token
-        console.log(tokenData);
-
+        const token = tokenSession.split(' ')[1]; //token
+        const tokenData = await verifyToken(token); // verifica el token y devuelve id,rol,iat,exp
         if (!tokenData) {
-            return res.status(401).json({"mensaje":"token invalido"});
+            return res.status(401).json({"mensaje":"token invalido u expirado"});
         }
 
         req.userData = tokenData; // le pasamos la data para seguir con el flujo
@@ -29,17 +24,14 @@ export const validToken = async (req, res, next) => {
 };
 
 
-export const authRol = (rol)=>async(req,res,next)=>{
+export const authRol = (rolRoute)=>async(req,res,next)=>{//roles
     try {
-        const {idUsuario} =req.userData;//extraemos el idUsuario
-        const [userData, metadata] = await sequelize.query( "EXEC sp_obtener_usuario :idUsuario",{
+        const {rol} =req.userData;//extraemos el idUsuario
+        const [nombre, metadata] = await sequelize.query( "EXEC sp_obtener_rol :idRol",{
               replacements: {
-                idUsuario,
-              }});//obtenemos el usuario
-          console.log(userData[0])
-          
-          if ([].concat(rol).includes(userData[0].rol)) {//validamos si tiene los permisos
-         
+                idRol:rol
+              }});//obtenemos el rol
+          if ([].concat(rolRoute).includes(nombre[0].rol)) {//validamos si tiene el rol esperado
             next();//seguimos el flujo
           } else {
             res.status(409).json({"mensaje":"Nececitas permisos elevado"})
