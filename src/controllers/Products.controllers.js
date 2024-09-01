@@ -1,5 +1,6 @@
 import sequelize from "../database/Connection.js";
 
+
 //Obtener todos los productos
 export const getProducts = async (req, res) => {
   try {
@@ -30,7 +31,10 @@ export const getProduct = async (req, res) => {
 };
 //Guardar proucto
 export const setProduct = async (req, res) => {
-  const {idUsuario }= req.userData
+
+
+  
+  const {idUsuario }= req.userData;
   const {
     fkCategoriaProducto,
     nombre,
@@ -39,7 +43,7 @@ export const setProduct = async (req, res) => {
     stock,
     fkEstado,
     precio,
-    foto,
+//foto
   } = req.body;
 
   if (
@@ -51,12 +55,18 @@ export const setProduct = async (req, res) => {
     !stock ||
     !fkEstado ||
     !precio ||
-    !foto
+    !req.file
   ) {
     return res.status(400).send("Todos los campos son obligatorios");
   }
-
+console.log(req.file)
   try {
+    //concatenacion para el guardado de foto
+    //http
+    //localhost
+    //nombre archivo
+    const rutaFoto =`${req.protocol}://${req.get('host')}/uploads/products/${req.file.filename}`;
+
     const [result, metadata] = await sequelize.query(
       "EXEC nuevo_producto :fkCategoriaProducto, :fkUsuario, :nombre, :marca, :codigo, :stock, :fkEstado, :precio, :foto",
       {
@@ -69,7 +79,7 @@ export const setProduct = async (req, res) => {
           stock: parseInt(stock),
           fkEstado: parseInt(fkEstado),
           precio: parseFloat(precio),
-          foto,
+          foto:rutaFoto,
         },
       }
     );
@@ -79,6 +89,7 @@ export const setProduct = async (req, res) => {
     console.error("Error al guardar el producto sp:nuevo_producto :", error);
     res.status(500).send("Error al guardar el producto");
   }
+
 };
 
 export const updateProduct = async (req, res) => {
@@ -92,10 +103,11 @@ export const updateProduct = async (req, res) => {
     stock,
     fkEstado,
     precio,
-    foto,
+
   } = req.body;
 
   try {
+    const rutaFoto =`${req.protocol}://${req.get('host')}/uploads/products/${req.file.filename}`;
     const result = await sequelize.query(
       "EXEC update_productos :idProducto,:fkCategoriaProducto, :fkUsuario, :nombre, :marca, :codigo, :stock, :fkEstado, :precio, :foto",
       {
@@ -109,7 +121,7 @@ export const updateProduct = async (req, res) => {
           stock: parseInt(stock),
           fkEstado: parseInt(fkEstado),
           precio: parseFloat(precio),
-          foto,
+          foto: rutaFoto
         },
       }
     );

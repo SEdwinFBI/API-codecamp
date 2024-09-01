@@ -7,10 +7,14 @@ import authRoute from './routers/auth.route.js';
 import UsuariosRoute from "./routers/Usuarios.route.js";
 import OrdenDetalleRoute from "./routers/DetallesOrden.route.js";
 
+
+
 const app = express();
+
 
 app.use(morgan("dev"));
 app.use(express.json());
+
 
 app.use(productsRoute);
 app.use(estadosRoute);
