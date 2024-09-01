@@ -4,8 +4,17 @@ import sequelize from "../database/Connection.js";
 //Obtener todos los productos
 export const getProducts = async (req, res) => {
   try {
-    const response = await sequelize.query("SELECT * FROM view_productos");
-    res.status(200).json(response);
+    let response = await sequelize.query("SELECT * FROM view_productos");
+    
+  const view_productos =response[0].map((r)=>{//tranformacion de ruta para servir la foto
+    return{
+      ...r,
+      foto: `${req.protocol}://${req.get('host')}${r.foto}`
+    }
+  })
+
+   
+    res.status(200).json(view_productos);
 
   } catch (error) {
     res.status(500).json({mensaje:"error interno"})
@@ -23,7 +32,14 @@ export const getProduct = async (req, res) => {
         replacements: { idProducto },
       }
     );
-    res.status(200).json(data);
+    //vista del producto
+    const view_producto =data.map((r)=>{
+      return{
+        ...r,
+        foto: `${req.protocol}://${req.get('host')}${r.foto}`//concatenacion de rutas
+      }
+    })
+    res.status(200).json(view_producto);
   } catch (error) {
     res.status(500).json({mensaje:"error interno"})
     console.log("Error al ejecutar sp_obtener_producto", error);
@@ -65,7 +81,8 @@ console.log(req.file)
     //http
     //localhost
     //nombre archivo
-    const rutaFoto =`${req.protocol}://${req.get('host')}/uploads/products/${req.file.filename}`;
+    //${req.protocol}://${req.get('host')}
+    const rutaFoto =`/uploads/products/${req.file.filename}`;
 
     const [result, metadata] = await sequelize.query(
       "EXEC nuevo_producto :fkCategoriaProducto, :fkUsuario, :nombre, :marca, :codigo, :stock, :fkEstado, :precio, :foto",
@@ -107,7 +124,8 @@ export const updateProduct = async (req, res) => {
   } = req.body;
 
   try {
-    const rutaFoto =`${req.protocol}://${req.get('host')}/uploads/products/${req.file.filename}`;
+    //${req.protocol}://${req.get('host')}
+    const rutaFoto =`/uploads/products/${req.file.filename}`;
     const result = await sequelize.query(
       "EXEC update_productos :idProducto,:fkCategoriaProducto, :fkUsuario, :nombre, :marca, :codigo, :stock, :fkEstado, :precio, :foto",
       {
