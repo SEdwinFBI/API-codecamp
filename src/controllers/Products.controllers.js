@@ -4,7 +4,7 @@ import sequelize from "../database/Connection.js";
 //Obtener todos los productos
 export const getProducts = async (req, res) => {
   try {
-    let response = await sequelize.query("SELECT * FROM view_productos");
+    let response = await sequelize.query("SELECT * FROM view_productos_editable ");
     
   const view_productos =response[0].map((r)=>{//tranformacion de ruta para servir la foto
     return{
