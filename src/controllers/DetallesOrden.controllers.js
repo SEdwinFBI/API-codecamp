@@ -76,8 +76,10 @@ export const crearOrdenConDetalles = async (req, res) => {
 };
 
 export const getOrdenes = async (req, res) => {
+  const {idUsuario }= req.userData
   try {
-    const result = await sequelize.query("SELECT * FROM view_ordenes");
+    /**obtener ordenes excepto la del operador */
+    const result = await sequelize.query(`SELECT * FROM view_ordenes where fkUsuario != ${idUsuario} order by nombre asc`);
 
     res.status(200).json(result);
   } catch (error) {
@@ -117,7 +119,13 @@ export const getOrdenDetalles = async (req, res) => {
           },
         }
       );
-      res.status(200).json(result);
+      const view_detalle =result.map((r)=>{//tranformacion de ruta para servir la foto
+        return{
+          ...r,
+          foto: `${req.protocol}://${req.get('host')}${r.foto}`
+        }
+      })
+      res.status(200).json(view_detalle);
     } catch (error) {
       res.status(404).json({
         mensaje: "no encontrado",
@@ -146,14 +154,14 @@ export const updateOrden = async (req, res) => {
             replacements:{
               idUsuario:parseInt(idUsuario),
                 idOrden:parseInt(idOrden),
-                fkUsuario,
+                fkUsuario:fkUsuario||null,
                 fkEstado,
-                nombre,
-                direccion,
-                telefono,
-                email,
-                fecha_entrega,
-                total}
+                nombre:nombre||null,
+                direccion:direccion||null,
+                telefono:telefono||null,
+                email:email||null,
+                fecha_entrega:fecha_entrega||null,
+                total:total||null}
         }
     );
     res.status(200).json({

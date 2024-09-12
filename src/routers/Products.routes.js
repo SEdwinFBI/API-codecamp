@@ -7,7 +7,7 @@ import { getPhotoProduct} from "../controllers/files.controllers.js";
 
 const router = Router();
 //para obtener la foto del producto
-router.get('/uploads/products/:filename',validToken,authRol([client, restricted]), getPhotoProduct);
+router.get('/uploads/products/:filename', getPhotoProduct);
 
 router.get('/productos',validToken,authRol([client, restricted]),getProducts)
 

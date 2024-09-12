@@ -67,7 +67,7 @@ export const updateCategoriaProducto = async(req,res)=>{
             }
         });
         res.status(200).json({
-            "mensaje":"se actualizo la categoria"+metadata
+            "mensaje":"se actualizo la categoria"
         });
     } catch (error) {
         res.status(500).json({

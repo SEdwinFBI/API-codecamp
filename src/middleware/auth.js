@@ -5,7 +5,7 @@ export const validToken = async (req, res, next) => {
     try {
         const tokenSession = req.headers.authorization;//obtenemos el encabezado: bearer y token
         if (!tokenSession) {
-            return res.status(401).json({"mensaje":"sin autorizacion"});//si no existe el encabezado
+            return res.status(401).json({"mensaje":"sin autorizacion toekn"});//si no existe el encabezado
         }
         const token = tokenSession.split(' ')[1]; //token
         const tokenData = await verifyToken(token); // verifica el token y devuelve id,rol,iat,exp

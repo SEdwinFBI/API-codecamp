@@ -13,5 +13,5 @@ export const getPhotoProduct = async(req, res) => {
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
       } else {
-        res.status(404).send(" ");
+        res.status(404).json({mensaje:"error al enviar imagen"});
   }};

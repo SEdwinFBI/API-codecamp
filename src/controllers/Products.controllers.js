@@ -13,7 +13,6 @@ export const getProducts = async (req, res) => {
     }
   })
 
-   
     res.status(200).json(view_productos);
 
   } catch (error) {
@@ -61,21 +60,8 @@ export const setProduct = async (req, res) => {
     precio,
 //foto
   } = req.body;
+console.log(req.body)
 
-  if (
-    !fkCategoriaProducto ||
-
-    !nombre ||
-    !marca ||
-    !codigo ||
-    !stock ||
-    !fkEstado ||
-    !precio ||
-    !req.file
-  ) {
-    return res.status(400).send("Todos los campos son obligatorios");
-  }
-console.log(req.file)
   try {
     //concatenacion para el guardado de foto
     //http
@@ -96,15 +82,15 @@ console.log(req.file)
           stock: parseInt(stock),
           fkEstado: parseInt(fkEstado),
           precio: parseFloat(precio),
-          foto:rutaFoto,
+          foto:rutaFoto ,
         },
       }
     );
-    res.status(200).send("Guardado con éxito");
+    res.status(200).json({mensaje:"Guardado con éxito"});
     console.log("Producto guardado con éxito:", metadata);
   } catch (error) {
     console.error("Error al guardar el producto sp:nuevo_producto :", error);
-    res.status(500).send("Error al guardar el producto");
+    res.status(500).json({mensaje:"Error al guardar el producto"});
   }
 
 };
@@ -122,10 +108,10 @@ export const updateProduct = async (req, res) => {
     precio,
 
   } = req.body;
-
   try {
     //${req.protocol}://${req.get('host')}
-    const rutaFoto =`/uploads/products/${req.file.filename}`;
+  
+    const rutaFoto = req.file && req.file.filename ? `/uploads/products/${req.file.filename}` : null;
     const result = await sequelize.query(
       "EXEC update_productos :idProducto,:fkCategoriaProducto, :fkUsuario, :nombre, :marca, :codigo, :stock, :fkEstado, :precio, :foto",
       {
@@ -139,14 +125,14 @@ export const updateProduct = async (req, res) => {
           stock: parseInt(stock),
           fkEstado: parseInt(fkEstado),
           precio: parseFloat(precio),
-          foto: rutaFoto
+          foto: rutaFoto || null
         },
       }
     );
-    res.status(200).send("Actualizado con exito");
+    res.status(200).json({mensaje:"Actualizado con exito"});
     console.log("producto:", idProducto, "actualizado con exito");
   } catch (error) {
     console.error("Error  actualizar producto sp:update_productos :", error);
-    res.status(500).send("Error al actualizar producto");
+    res.status(500).json({mensaje:"Error al actualizar producto"});
   }
 };

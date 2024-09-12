@@ -19,7 +19,8 @@ export const login = async (req, res) => {
       const tokenSession = await tokenSign(data[0]); //bearer token
       //retornamos el token que va en el request
       return res.status(200).json({
-        //"data":data[0],//datos del usuario. 
+        //cambio ##########
+        "data":data[0].fkRol,//datos del usuario. 
         tokenSession
       });
 
@@ -33,15 +34,19 @@ export const login = async (req, res) => {
   }
 };
 export const register = async (req, res) => {
-  const { nombre, email, password_user, telefono, fecha_nacimiento } = req.body;
+
+  const { nombre, email, password_user, telefono, fecha_nacimiento,fkRol } = req.body;
   try {
     if (await invalidarEmail(email)) {
       return res.status(400).json({"mensaje":"correo ya registrado"});
     }; 
+    if(fkRol > 2 && fkRol < 1){
+      return res.status(400).json({"mensaje":"Rol entre 1 y 2"});
+    }
 
     const hashPassword = await encrypt(password_user);
     const result = await sequelize.query(
-      "EXEC nuevo_usuario :nombre, :email, :hashPassword, :telefono, :fecha_nacimiento",
+      "EXEC nuevo_usuario :nombre, :email, :hashPassword, :telefono, :fecha_nacimiento,:fkRol",
       {
         replacements: {
           nombre,
@@ -49,6 +54,7 @@ export const register = async (req, res) => {
           hashPassword,
           telefono,
           fecha_nacimiento,
+          fkRol
         },
       }
     );
