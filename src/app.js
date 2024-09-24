@@ -7,6 +7,7 @@ import authRoute from './routers/auth.route.js';
 import UsuariosRoute from "./routers/Usuarios.route.js";
 import OrdenDetalleRoute from "./routers/DetallesOrden.route.js";
 import cors from 'cors';
+import ViewRoute from "./routers/Views.routes.js";
 
 
 
@@ -23,8 +24,9 @@ app.use(categoriaProductosRoute);
 app.use(authRoute);
 app.use(UsuariosRoute);
 app.use(OrdenDetalleRoute);
+app.use(ViewRoute)
 app.use((req,res)=>{
-    res.status(404).json({mensaje:"not found"})
+    res.status(404).json({mensaje:"Peticion no valida"})
 })
 
 
